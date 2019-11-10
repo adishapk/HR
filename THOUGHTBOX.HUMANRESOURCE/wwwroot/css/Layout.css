@@ -1,0 +1,45 @@
+﻿body {
+    /*background-color: coral;*/
+    background-color: #1F618D;
+}
+.navbgcolor {
+    background-color: #1F618D;
+}
+
+.txtcolor {
+    color: white;
+}
+
+.togtxtcolor {
+    color: white;
+}
+
+ul.nav a:hover {
+    background-color: #AED6F1 !important;
+    color: black !important;
+}
+
+
+ul.nav a:link {
+    color: white;
+}
+
+ ul.nav a:visited {
+    background-color: #AED6F1 !important;
+    color: black !important;
+}
+.navbar-brand.custom {
+    color: white;
+}
+.fa-passwd-reset > .fa-lock {
+    font-size: 0.85rem;
+}
+
+.footer {
+    position: fixed;
+    height: 30px;
+    bottom: 0;
+    width: 100%;
+    color: black;
+    background-color: #1F618D;
+}

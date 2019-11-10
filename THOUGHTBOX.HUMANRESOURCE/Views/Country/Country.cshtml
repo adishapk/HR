@@ -1,0 +1,168 @@
+﻿@model THOUGHTBOX.DOMAIN.Domain.Country
+
+@{
+    ViewData["Title"] = "Country";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Country.js"></script>
+
+<div id="page-wrapper">
+    <div class="row">
+
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-lightbulb-o"></i>&nbsp;&nbsp;New Country can create here.&nbsp;&nbsp;Press <i class="fa fa-edit"></i> to Edit created Currency details. Press <i class="fa fa-cut"></i> to Delete created Currency details. Clicking on Currency Name / Currency Code sort data on ascending/descending order. <span style="color:rosybrown;font-weight: bold;font-size:large;">*</span> are mandatory in this page. Please enter some information while pressing submit button for that fields. <span style="color:rosybrown;font-weight: bold"> Active Status is to verify whether the Company is currently active or not. Company Code entering need to be unique. If the code is already existing in system will not accept the same.</span>&nbsp;&nbsp;<i class="fa fa-lightbulb-o"></i>
+                </div>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <form role="form">
+
+
+                                <div id="alertWmsg" style="display:none" class="alert alert-danger alert-dismissable">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                                    <strong>Some Error Happend!</strong>
+                                </div>
+                                <div id="alertSmsg" style="display:none" class="alert alert-success alert-dismissable">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                                    <strong>Successfully Inserted!</strong>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Name&nbsp;<span style="color:red;font-weight: bold;font-size:large;">*</span></label>
+                                    @Html.TextBoxFor(Country => Country.Name_Eng, new { id = "frm-Countryname", placeholder = "Country Name", TabIndex = "1", autocomplete = "off", MaxLength = "50", @class = "form-control" })
+                                    @Html.ValidationMessageFor(Country => Country.Name_Eng)
+                                    @Html.HiddenFor(Country => Country.Id, new { id = "hidenid" })
+                                    @Html.HiddenFor(Country => Country.Currency.Id, new { id = "hidenid1" })
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label>Code&nbsp;<span style="color:red;font-weight: bold;font-size:large;">*</span></label>
+                                    @Html.TextBoxFor(Country => Country.Code, new { id = "frm-CountryCode", placeholder = "Country Code", TabIndex = "2", autocomplete = "off", MaxLength = "10", @class = "form-control" })
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label>Currency Name&nbsp;<span style="color:red;font-weight: bold;font-size:large;">*</span></label>
+                                    @Html.DropDownListFor(Country => Country.Currency.Id, new SelectList(ViewBag.Currency, "Value", "Text"), "--Select--", new { id = "frm-currency", TabIndex = "3", style = "color:brown; font-weight:bold;", @class = "form-control" })
+                                </div>
+
+
+                                <br />
+                                <br />
+
+                                <button type="button" onclick="datainsert();" id="btnsubupdate" class="btn btn-success">@ViewBag.SubmitValue</button>
+
+                                <button type="reset" class="btn btn-default">Reset</button>
+                            </form>
+                        </div>
+
+                        <!-- /.col-lg-6 (nested) -->
+                        <div class="col-lg-9" ng-app="app" ng-controller="customersController">
+
+                            <div class="col-lg-12">
+                                <div class="panel panel-default">
+
+                                    <div class="panel-heading">
+                                        New Country Created  <label class="control-label" style="width:80px;text-align:center;">Search: </label><span style="text-align:right"><input ng-model="query" type="text" placeholder="Filter by" class="control-label" autofocus style="width:150px;"><i class="fa fa-search"></i></span>
+                                    </div>
+
+
+
+
+                                    <!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover" id="myTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:50px;text-align:center;">#</th>
+                                                        <th style="width:350px;">
+                                                            <a href="#" ng-click="orderByField='name_eng'; reverseSort = !reverseSort">
+                                                                Name <span ng-show="orderByField == 'name_eng'"><span ng-show="!reverseSort"><i class="glyphicon glyphicon-sort-by-alphabet"></i></span><span ng-show="reverseSort"><i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></span></span>
+                                                            </a>
+                                                        </th>
+                                                        <th style="width:120px;">
+                                                            <a href="#" ng-click="orderByField='code'; reverseSort = !reverseSort">
+                                                                Code <span ng-show="orderByField == 'code'"><span ng-show="!reverseSort"><i class="glyphicon glyphicon-sort-by-alphabet"></i></span><span ng-show="reverseSort"><i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></span></span>
+                                                            </a>
+                                                        </th>
+
+
+                                                        <th style="width:60px;text-align:center;">Edit</th>
+                                                        <th style="width:60px;text-align:center;">Delete</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="x in names | orderBy:orderByField:reverseSort | filter: query | offset: currentPage*itemsPerPage | limitTo: itemsPerPage">
+                                                        <td style="width:50px;text-align:center;">
+                                                            {{ currentPage*itemsPerPage + $index + 1}}
+                                                            <input type="hidden" name="Categoryid" id="ID" value="{{x.id}} " />
+                                                        </td>
+                                                        <td style="width:350px;"><span data-tooltip class="has-tip" title="{{x.name_eng}}">{{x.name_eng}}</span></td>
+                                                        <td style="width:120px;"><span data-tooltip class="has-tip" title="{{x.code}}">{{x.code}}</span></td>
+                                                        <td style="width:60px;text-align:center;"><a href="~/Country/Country/?id={{x.id}}&methode=Edit"><i class="fa fa-edit"></i></a></td>
+                                                        <td style="width:60px;text-align:center;"><a href="~/Country/Country/?id={{x.id}}&methode=Delete" onclick="return confirm('do you want to delete the selected entry?')"><i class="fa fa-cut"></i></a></td>
+                                                    </tr>
+
+                                                    <tr>
+
+                                                        <td colspan="5" style="width:640px;">
+                                                            <ul class="pagination pull-right" style="height:5px;">
+                                                                <li ng-class="prevPageDisabled()">
+                                                                    <a href="#" ng-click="prevPage()">« Prev</a>
+                                                                </li>
+                                                                <li ng-repeat="n in range()"
+                                                                    ng-class="{active: n == currentPage}" ng-click="setPage(n)">
+                                                                    <a href="#">{{n+1}}</a>
+                                                                </li>
+                                                                <li ng-class="nextPageDisabled()">
+                                                                    <a href="#" ng-click="nextPage()">Next »</a>
+                                                                </li>
+
+                                                            </ul>
+
+
+                                                        </td>
+
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                        <!-- /.table-responsive -->
+                                    </div>
+                                    <!-- /.panel-body -->
+
+                                </div>
+                                <!-- /.panel -->
+                            </div>
+
+                        </div>
+                        <!-- /.col-lg-6 (nested) -->
+                    </div>
+                    <!-- /.row (nested) -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+
+
+
+
+
